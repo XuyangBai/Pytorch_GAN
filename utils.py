@@ -2,7 +2,7 @@ import os, gzip, torch
 import torch.nn as nn
 import numpy as np
 import scipy.misc
-# import imageio
+import imageio
 import matplotlib.pyplot as plt
 from torchvision import datasets, transforms
 
@@ -106,12 +106,12 @@ def merge(images, size):
         raise ValueError('in merge(images,size) images parameter ''must have dimensions: HxW or HxWx3 or HxWx4')
 
 
-# def generate_animation(path, num):
-#     images = []
-#     for e in range(num):
-#         img_name = path + '_epoch%03d' % (e+1) + '.png'
-#         images.append(imageio.imread(img_name))
-#     imageio.mimsave(path + '_generate_animation.gif', images, fps=5)
+def generate_animation(path, num):
+    images = []
+    for e in range(num):
+        img_name = path + '_epoch%03d' % (e+1) + '.png'
+        images.append(imageio.imread(img_name))
+    imageio.mimsave(path + '_generate_animation.gif', images, fps=5)
 
 def loss_plot(hist, path='Train_hist.png', model_name=''):
     x = range(len(hist['D_loss']))

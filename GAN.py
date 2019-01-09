@@ -5,6 +5,49 @@ import torch.optim as optim
 from dataloader import dataloader
 
 
+# class generator(nn.Module):
+#     def __init__(self, input_dim=62, output_dim=28 * 28, img_size=28):
+#         super(generator, self).__init__()
+#         self.input_dim = input_dim
+#         self.output_dim = output_dim
+#         self.img_size = img_size
+#
+#         self.network = nn.Sequential(
+#             nn.Linear(self.input_dim, 256),
+#             nn.BatchNorm1d(256),
+#             nn.ReLU(),
+#             nn.Linear(256, self.output_dim),
+#             nn.Tanh(),
+#         )
+#         utils.initialize_weights(self)
+#
+#     def forward(self, input):
+#         x = self.network(input)
+#         x = x.view(-1, 1, self.img_size, self.img_size)
+#         return x
+#
+#
+# class discriminator(nn.Module):
+#     def __init__(self, input_dim=28 * 28, output_dim=1, img_size=28):
+#         super(discriminator, self).__init__()
+#         self.input_dim = input_dim
+#         self.output_dim = output_dim
+#         self.img_size = img_size
+#
+#         self.network = nn.Sequential(
+#             nn.Linear(self.input_dim, 128),
+#             nn.BatchNorm1d(128),
+#             nn.LeakyReLU(0.1),
+#             nn.Linear(128, self.output_dim),
+#             nn.Sigmoid(),
+#         )
+#         utils.initialize_weights(self)
+#
+#     def forward(self, input):
+#         input = input.view(-1, np.prod(input.shape[1:]))
+#         x = self.network(input)
+#         x = x.view(-1, self.output_dim)
+#         return x
 class generator(nn.Module):
     # Network Architecture is exactly same as in infoGAN (https://arxiv.org/abs/1606.03657)
     # Architecture : FC1024_BR-FC7x7x128_BR-(64)4dc2s_BR-(1)4dc2s_S
@@ -92,8 +135,8 @@ class GAN(object):
         data = self.data_loader.__iter__().__next__()[0]
 
         # networks init
-        self.G = generator(input_dim=self.z_dim, output_dim=data.shape[1], input_size=self.input_size)
-        self.D = discriminator(input_dim=data.shape[1], output_dim=1, input_size=self.input_size)
+        self.G = generator(input_dim=self.z_dim, output_dim=data.shape[1], input_size=data.shape[-1])
+        self.D = discriminator(input_dim=data.shape[1], output_dim=1, input_size=data.shape[-1])
         self.G_optimizer = optim.Adam(self.G.parameters(), lr=args.lrG, betas=(args.beta1, args.beta2))
         self.D_optimizer = optim.Adam(self.D.parameters(), lr=args.lrD, betas=(args.beta1, args.beta2))
 
@@ -169,8 +212,9 @@ class GAN(object):
                 if ((iter + 1) % 100) == 0:
                     print("Epoch: [%2d] [%4d/%4d] D_loss: %.8f, G_loss: %.8f" %
                           (
-                          (epoch + 1), (iter + 1), self.data_loader.dataset.__len__() // self.batch_size, D_loss.item(),
-                          G_loss.item()))
+                              (epoch + 1), (iter + 1), self.data_loader.dataset.__len__() // self.batch_size,
+                              D_loss.item(),
+                              G_loss.item()))
 
             self.train_hist['per_epoch_time'].append(time.time() - epoch_start_time)
             with torch.no_grad():
