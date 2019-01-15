@@ -1,3 +1,4 @@
+FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 FROM py35pytorch
-COPY . /src
-RUN python src/main.py --dataset mnist --gan_style GAN --epoch 10 --batch_size 64
+COPY . /Code/ 
+

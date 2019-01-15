@@ -1,0 +1,6 @@
+imageio
+scipy
+numpy 
+torch
+torchvision
+matplotlib
