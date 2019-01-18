@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import argparse, os
 from GAN import GAN
+from WGAN import WGAN
 
 torch.manual_seed(1)
 np.random.seed(1)
@@ -78,6 +79,8 @@ def main():
         # declare instance for GAN
     if args.gan_type == 'GAN':
         gan = GAN(args)
+    elif args.gan_type == 'WGAN':
+        gan = WGAN(args)
     else:
         raise Exception("[!] There is no option for " + args.gan_type)
 
