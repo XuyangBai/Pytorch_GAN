@@ -176,17 +176,17 @@ class WGAN(object):
             with torch.no_grad():
                 self.visualize_results((epoch + 1))
 
-            self.train_hist['total_time'].append(time.time() - start_time)
-            print("Avg one epoch time: %.2f, total %d epochs time: %.2f" % (
-                np.mean(self.train_hist['per_epoch_time']),
-                self.epoch, self.train_hist['total_time'][0]))
-            print("Training finish!... save training results")
+        self.train_hist['total_time'].append(time.time() - start_time)
+        print("Avg one epoch time: %.2f, total %d epochs time: %.2f" % (
+            np.mean(self.train_hist['per_epoch_time']),
+            self.epoch, self.train_hist['total_time'][0]))
+        print("Training finish!... save training results")
 
-            self.save()
-            # utils.generate_animation(self.result_dir + '/' + self.dataset + '/' + self.model_name + '/' + self.model_name,
-            #                         self.epoch)
-            utils.loss_plot(self.train_hist, os.path.join(self.save_dir, self.dataset, self.model_name),
-                            self.model_name)
+        self.save()
+        # utils.generate_animation(self.result_dir + '/' + self.dataset + '/' + self.model_name + '/' + self.model_name,
+        #                         self.epoch)
+        utils.loss_plot(self.train_hist, os.path.join(self.save_dir, self.dataset, self.model_name),
+                        self.model_name)
 
     def visualize_results(self, epoch, fix=True):
         self.G.eval()
